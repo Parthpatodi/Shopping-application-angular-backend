@@ -3,6 +3,7 @@ const SubCategory = require('../model/sub-category.model');
 const fireBase = require("../middle/fireBase");
 const router = express.Router();
 const multer = require('multer');
+const routeCache = require('route-cache');
 var storage = multer.diskStorage({
     destination: 'public/images',
     filename: function(req, file, cb) {
@@ -55,7 +56,7 @@ router.delete('/deletecategory', (request, response) => {
 
         })
 });
-router.get('/bySubCategory/:cid', (request, response) => {
+router.get('/bySubCategory/:cid', routeCache.cacheSeconds(20), (request, response) => {
     SubCategory.findOne({ _id: request.params.cid }).then(result => {
         console.log(result);
         return response.status(200).json(result);

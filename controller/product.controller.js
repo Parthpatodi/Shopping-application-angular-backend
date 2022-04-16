@@ -97,10 +97,10 @@ exports.updateProduct = (request, response) => {
     productController.updateOne({ _id: request.body.productId }, {
         $set: {
             productName: request.body.productName,
-            productImageFront: "http://localhost:3000/images/" + request.files[0].filename,
-            productImageBack: "http://localhost:3000/images/" + request.files[1].filename,
-            productImageLeft: "http://localhost:3000/images/" + request.files[2].filename,
-            productImageRight: "http://localhost:3000/images/" + request.files[3].filename,
+            productImageFront: 'https://firebasestorage.googleapis.com/v0/b/vastram-d3e69.appspot.com/o/' + request.files[0].filename + "?alt=media&token=abcddcba",
+            productImageBack: 'https://firebasestorage.googleapis.com/v0/b/vastram-d3e69.appspot.com/o/' + request.files[1].filename + "?alt=media&token=abcddcba",
+            productImageLeft: 'https://firebasestorage.googleapis.com/v0/b/vastram-d3e69.appspot.com/o/' + request.files[2].filename + "?alt=media&token=abcddcba",
+            productImageRight: 'https://firebasestorage.googleapis.com/v0/b/vastram-d3e69.appspot.com/o/' + request.files[3].filename + "?alt=media&token=abcddcba",
             productQty: request.body.productQty * 1,
             productPrice: request.body.productPrice * 1,
             productDescription: request.body.productDescription

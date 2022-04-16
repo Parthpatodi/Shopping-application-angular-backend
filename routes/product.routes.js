@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const routeCache = require('route-cache');
 const productController = require('../controller/product.controller');
 const { body } = require('express-validator');
 const multer = require('multer');
@@ -22,7 +23,7 @@ router.post('/update-product', upload.array('productImages'), body('productName'
     body('productId').not().isEmpty(), productController.updateProduct
 );
 
-router.get('/product-list', productController.productList);
+router.get('/product-list', routeCache.cacheSeconds(20), productController.productList);
 
 router.delete('/delete-product/:id', productController.deleteProduct);
 
