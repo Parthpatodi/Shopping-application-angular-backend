@@ -41,8 +41,10 @@ const productSchema = new mongoose.Schema({
     subCategory: {
         type: Schema.Types.ObjectId,
         ref: "subCatagory"
+    },
+    date: {
+        type: String
     }
-
-}, { timestamps: true });
+});
 
 module.exports = mongoose.model('products', productSchema);

@@ -1,8 +1,21 @@
-//const express=require('express');
 const productController = require('../model/product.model');
-
+const moment = require('moment');
+const fireBase = require("../middle/fireBase");
 const { validationResult } = require('express-validator');
 const express = require('express');
+const { route } = require('../routes/product.routes');
+
+exports.productListSubcategory = (request, response) => {
+    productController.findOne({ cat_id: request.params.id })
+        .then(result => {
+            console.log(result);
+            return response.status(200).json(result);
+        })
+        .catch(err => {
+            console.log(err);
+            return response.status(404).json(err);
+        });
+}
 
 exports.productList = (request, response) => {
     productController.find().then(results => {
@@ -29,6 +42,7 @@ exports.deleteProduct = (request, response) => {
 
 exports.addProduct = (request, response) => {
     console.log(request.body);
+    console.log(request.files);
     const errors = validationResult(request);
 
     if (!errors.isEmpty()) {
@@ -40,17 +54,20 @@ exports.addProduct = (request, response) => {
     const productImageBack = "";
     const productImageLeft = "";
     const productImageRight = "";
+    var date = moment().format('LLLL')
+    console.log(date);
 
     productController.create({
         productName: request.body.productName,
-        productImageFront: "http://localhost:3000/images/" + request.files[0].filename,
-        productImageBack: "http://localhost:3000/images/" + request.files[1].filename,
-        productImageLeft: "http://localhost:3000/images/" + request.files[2].filename,
-        productImageRight: "http://localhost:3000/images/" + request.files[3].filename,
+        productImageFront: 'https://firebasestorage.googleapis.com/v0/b/vastram-d3e69.appspot.com/o/' + request.files[0].filename + "?alt=media&token=abcddcba",
+        productImageBack: 'https://firebasestorage.googleapis.com/v0/b/vastram-d3e69.appspot.com/o/' + request.files[1].filename + "?alt=media&token=abcddcba",
+        productImageLeft: 'https://firebasestorage.googleapis.com/v0/b/vastram-d3e69.appspot.com/o/' + request.files[2].filename + "?alt=media&token=abcddcba",
+        productImageRight: 'https://firebasestorage.googleapis.com/v0/b/vastram-d3e69.appspot.com/o/' + request.files[3].filename + "?alt=media&token=abcddcba",
         productQty: request.body.productQty,
         productPrice: request.body.productPrice,
         productDescription: request.body.productDescription,
-        subCategoryId: request.body.categoryId
+        subCategoryId: request.body.categoryId,
+        date: date
     }).then(result => {
         console.log(result);
         return response.status(201).json(result);
@@ -58,6 +75,17 @@ exports.addProduct = (request, response) => {
         console.log(err);
         return response.status(403).json(err);
     });
+}
+
+exports.sortDatewise = (request, response) => {
+    Product.find({}).sort([
+        ['date', -1]
+    ]).exec(function(err, docs) {
+        console.log(docs);
+        console.log(err);
+        response.status(200).json(docs);
+    });
+
 }
 
 exports.updateProduct = (request, response) => {
@@ -87,4 +115,5 @@ exports.updateProduct = (request, response) => {
         console.log(err);
         return response.status(500).json({ message: 'Opps!Something went wrong' });
     });
+
 }
