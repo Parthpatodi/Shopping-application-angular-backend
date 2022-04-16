@@ -94,7 +94,7 @@ exports.updateProduct = (request, response) => {
     if (!errors.isEmpty())
         return response.status(400).json({ errors: errors })
 
-    productController.updateOne({ _id: request.body.productId }, {
+    productController.updateOne({ _id: request.params.pid }, {
         $set: {
             productName: request.body.productName,
             productImageFront: 'https://firebasestorage.googleapis.com/v0/b/vastram-d3e69.appspot.com/o/' + request.files[0].filename + "?alt=media&token=abcddcba",
