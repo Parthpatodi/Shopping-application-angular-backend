@@ -24,6 +24,7 @@ router.post('/update-product/:pid', upload.array('productImages'), fireBase.fire
 );
 
 router.get('/product-list', routeCache.cacheSeconds(20), productController.productList);
+
 router.get('/byProduct/:sid', routeCache.cacheSeconds(20), (request, response) => {
     Product.findOne({ _id: request.params.sid }).then(result => {
         console.log(result);
@@ -33,6 +34,9 @@ router.get('/byProduct/:sid', routeCache.cacheSeconds(20), (request, response) =
         return response.status(500).json({ status: 'failed' });
     })
 })
+
+router.get('/product-details/:pid',productController.viewProductDetail);
+
 router.delete('/delete-product/:id', productController.deleteProduct);
 
 module.exports = router;
