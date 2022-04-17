@@ -117,3 +117,12 @@ exports.updateProduct = (request, response) => {
     });
 
 }
+exports.byProduct = (request, response) => {
+    productController.find({ subCategoryId: request.params.sid }).then(result => {
+        console.log(result);
+        return response.status(200).json(result);
+    }).catch(err => {
+        console.log(err);
+        return response.status(500).json({ status: 'failed' });
+    });
+};
