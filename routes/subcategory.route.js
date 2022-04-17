@@ -16,10 +16,12 @@ var upload = multer({ storage: storage });
 
 
 router.post('/add', upload.array('image'), fireBase.fireBaseStorage, (request, response) => {
+    console.log(request.body);
+    console.log(request.file);
     SubCategory.create({
             name: request.body.name,
             image: 'https://firebasestorage.googleapis.com/v0/b/vastram-d3e69.appspot.com/o/' + request.files[0].filename + "?alt=media&token=abcddcba",
-            cat_id: request.body.categoryId
+            cat_id: request.body.cat_id
 
         })
         .then(result => {
@@ -58,7 +60,8 @@ router.delete('/deletecategory', (request, response) => {
         })
 });
 router.get('/bySubCategory/:cid', routeCache.cacheSeconds(20), (request, response) => {
-    SubCategory.findOne({ _id: request.params.cid }).then(result => {
+    console.log(request.params);
+    SubCategory.findOne({ cat_id: request.params.cid }).then(result => {
         console.log(result);
         return response.status(200).json(result);
     }).catch(err => {
