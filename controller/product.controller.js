@@ -17,6 +17,18 @@ exports.productListSubcategory = (request, response) => {
         });
 }
 
+exports.viewProductDetail = (request,response)=>{
+    productController.findOne({_id : request.params.pid})
+       .then((result) => {
+           console.log(result);
+           return responses.status(200).json(result);
+        })
+        .catch((err) => {
+           console.log(err);
+           return response.status(404).json(err);
+    });
+}
+
 exports.productList = (request, response) => {
     productController.find().then(results => {
         console.log(results)

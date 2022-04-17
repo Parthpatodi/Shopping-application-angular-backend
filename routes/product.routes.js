@@ -24,7 +24,10 @@ router.post('/update-product/:pid', upload.array('productImages'), fireBase.fire
 );
 
 router.get('/product-list', routeCache.cacheSeconds(20), productController.productList);
+
 router.get('/byProduct/:sid', routeCache.cacheSeconds(20), productController.byProduct);
+
+router.get('/product-details/:pid',productController.viewProductDetail);
 
 router.delete('/delete-product/:id', productController.deleteProduct);
 
