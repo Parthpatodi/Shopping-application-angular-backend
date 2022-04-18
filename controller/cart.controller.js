@@ -39,7 +39,7 @@ exports.delCart = (request, response) => {
                 productList: [{
                     _id: request.body.productId
                 }]
-            }
+            } 
         })
         .then(result => {
             return response.status(202).json({ message: 'Deleted successfully' });
