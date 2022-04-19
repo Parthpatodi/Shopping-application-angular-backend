@@ -11,7 +11,7 @@ var algo = "aes256";
 exports.signup = async (request,response)=>{
     const errors = validationResult(request);
     if (!errors.isEmpty())
-      return response.status(400).json({ errors: errors.array() });
+      return response.status(400).json({ errors: errors.array() }); 
 
         const {name ,email,password,address,mobile} = request.body;
       
