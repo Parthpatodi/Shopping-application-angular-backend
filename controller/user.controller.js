@@ -106,7 +106,7 @@ exports.signin = (request, response) => {
         var decrypted =
           decipher.update(result.password, "hex", "utf8") +
           decipher.final("utf8");
-        if(result.isVerified == true ){
+         if(result.isVerified == true ){
             if (decrypted == request.body.password){
               const payload = {
                 user: {
@@ -132,8 +132,8 @@ exports.signin = (request, response) => {
           else 
               return response.status(202).json({ message: "Invalid Password" });     
           }
-        else
-          return response.status(500).json({message : "Please verify your accout first then login"});
+         else
+         return response.status(500).json({message : "Please verify your accout first then login"});
     })
       .catch((err) => {
         console.log(err);

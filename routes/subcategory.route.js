@@ -61,7 +61,7 @@ router.delete('/deletecategory', (request, response) => {
 });
 router.get('/bySubCategory/:cid', routeCache.cacheSeconds(20), (request, response) => {
     console.log(request.params);
-    SubCategory.findOne({ cat_id: request.params.cid }).then(result => {
+    SubCategory.find({ cat_id: request.params.cid }).then(result => {
         console.log(result);
         return response.status(200).json(result);
     }).catch(err => {
