@@ -15,7 +15,7 @@ exports.signup = async (request,response)=>{
 
         const {name ,email,password,address,mobile} = request.body;
       
-          let user = await User.findOne({email});
+          let user = await User.findOne({email}); 
           if(user){
             return response.status(400).json({msg:"already exists"})
           }
