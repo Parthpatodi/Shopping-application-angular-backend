@@ -29,6 +29,7 @@ router.post("/edit-user", auth,
     body("mobile").isMobilePhone(),
     userController.edit);
 
+router.post("/search-food",userController.searchProducts);
 // router.delete("/delete-user/:id",userController.deleteUser);
 
 module.exports = router;

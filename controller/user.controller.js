@@ -3,6 +3,7 @@ const {validationResult} = require("express-validator");
 const gravatar = require("gravatar");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const Product = require("../model/product.model");
 const config = require('config');
 let jwt = require("jsonwebtoken");
 var key = "password";
@@ -12,9 +13,7 @@ exports.signup = async (request,response)=>{
     const errors = validationResult(request);
     if (!errors.isEmpty())
       return response.status(400).json({ errors: errors.array() }); 
-
         const {name ,email,password,address,mobile} = request.body;
-      
           let user = await User.findOne({email}); 
           if(user){
             return response.status(400).json({msg:"already exists"})
@@ -182,3 +181,14 @@ exports.signin = (request, response) => {
       });
   };
   
+  exports.searchProducts = (request, response) => {
+    var regex = new RegExp(request.body.text, "i");
+    Product.find({ productName: regex })
+      .then((result) => {
+        response.status(200).json(result);
+          })
+      .catch((err) => {
+        console.log(err);
+        response.status(500).json({ message: "Somthing went wrong" });
+      });
+  };
