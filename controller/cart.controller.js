@@ -34,7 +34,7 @@ exports.viewCart = (request, response) => {
 
 
 exports.delCart = (request, response) => {
-    cartmodel.updateOne({ userId: request.body.userId }, {
+    cartmodel.updateOne({ userId: request.body.userId }, { 
             $pullAll: {
                 productList: [{
                     _id: request.body.productId 
