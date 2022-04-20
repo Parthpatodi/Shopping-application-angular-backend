@@ -66,7 +66,7 @@ exports.addProduct = (request, response) => {
     const productImageBack = "";
     const productImageLeft = "";
     const productImageRight = "";
-    var date = moment().format('LLLL')
+    var date = moment().format('LLLL')   
     console.log(date);
 
     productController.create({
