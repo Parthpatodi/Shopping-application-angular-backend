@@ -21,7 +21,7 @@ exports.viewProductDetail = (request,response)=>{
     productController.findOne({_id : request.params.pid})
        .then((result) => {
            console.log(result);
-           return responses.status(200).json(result);
+           return response.status(200).json(result);
         })
         .catch((err) => {
            console.log(err);
