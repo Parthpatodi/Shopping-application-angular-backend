@@ -185,10 +185,10 @@ exports.signin = (request, response) => {
     var regex = new RegExp(request.body.text, "i");
     Product.find({ productName: regex })
       .then((result) => {
-        response.status(200).json(result);
+        return response.status(200).json(result);
           })
       .catch((err) => {
         console.log(err);
-        response.status(500).json({ message: "Somthing went wrong" });
+        return response.status(500).json({ message: "Somthing went wrong" });
       });
   };
