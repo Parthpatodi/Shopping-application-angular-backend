@@ -3,6 +3,7 @@ const {validationResult} = require("express-validator");
 const gravatar = require("gravatar");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const Product = require("../model/product.model");
 const config = require('config');
 let jwt = require("jsonwebtoken");
 var key = "password";
@@ -11,11 +12,9 @@ var algo = "aes256";
 exports.signup = async (request,response)=>{
     const errors = validationResult(request);
     if (!errors.isEmpty())
-      return response.status(400).json({ errors: errors.array() });
-
+      return response.status(400).json({ errors: errors.array() }); 
         const {name ,email,password,address,mobile} = request.body;
-      
-          let user = await User.findOne({email});
+          let user = await User.findOne({email}); 
           if(user){
             return response.status(400).json({msg:"already exists"})
           }
@@ -53,11 +52,11 @@ exports.signup = async (request,response)=>{
         var message = {
           from: "vastram823@gmail.com",
           to: request.body.email,
-          subject: "Confirm your account on Vastram",
+          subject: "Confirm your account on Vivah",
           html:
-            '<p>Thanks for signing up with Vastram! You must follow this link within 30 days of registration to activate your account:</p><a href= "http://localhost:3000/user/verify-account/' +
+            '<p>Thanks for signing up with Vivah! You must follow this link within 30 days of registration to activate your account:</p><a href= "https://vivah-backend.herokuapp.com/user/verify-account/' +
             result._id +
-            '">click here to verify your account</a><p>Have fun, and dont hesitate to contact us with your feedback</p><br><p> The Vastram Team</p><a href="https://book-your-meal.herokuapp.com/">book-your-meal.herokuapp.com/</a>'
+            '">click here to verify your account</a><p>Have fun, and dont hesitate to contact us with your feedback</p><br><p> The Vivah Team</p><a href="https://vivah-backend.herokuapp.com/">book-your-meal.herokuapp.com/</a>'
         };
   
         transporter.sendMail(message, (err, info) => {
@@ -182,3 +181,14 @@ exports.signin = (request, response) => {
       });
   };
   
+  exports.searchProducts = (request, response) => {
+    var regex = new RegExp(request.body.text, "i");
+    Product.find({ productName: regex })
+      .then((result) => {
+        return response.status(200).json(result);
+          })
+      .catch((err) => {
+        console.log(err);
+        return response.status(500).json({ message: "Somthing went wrong" });
+      });
+  };

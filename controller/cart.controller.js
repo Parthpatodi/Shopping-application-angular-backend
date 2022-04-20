@@ -34,12 +34,12 @@ exports.viewCart = (request, response) => {
 
 
 exports.delCart = (request, response) => {
-    cartmodel.updateOne({ userId: request.body.userId }, {
+    cartmodel.updateOne({ userId: request.body.userId }, { 
             $pullAll: {
                 productList: [{
-                    _id: request.body.productId
+                    _id: request.body.productId 
                 }]
-            }
+            } 
         })
         .then(result => {
             return response.status(202).json({ message: 'Deleted successfully' });
