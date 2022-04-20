@@ -54,9 +54,9 @@ exports.signup = async (request,response)=>{
           to: request.body.email,
           subject: "Confirm your account on Vivah",
           html:
-            '<p>Thanks for signing up with Vivah! You must follow this link within 30 days of registration to activate your account:</p><a href= "https://vivah-backend.herokuapp.com/user/verify-account/' +
+            '<p>Thanks for signing up with Vivah! You must follow this link within 30 days of registration to activate your account:</p><a href= "https://vivah-backend-api.herokuapp.com/user/verify-account/' +
             result._id +
-            '">click here to verify your account</a><p>Have fun, and dont hesitate to contact us with your feedback</p><br><p> The Vivah Team</p><a href="https://vivah-backend.herokuapp.com/">book-your-meal.herokuapp.com/</a>'
+            '">click here to verify your account</a><p>Have fun, and dont hesitate to contact us with your feedback</p><br><p> The Vivah Team</p><a href="https://vivah-backend-api.herokuapp.com/">Vivah.herokuapp.com/</a>'
         };
   
         transporter.sendMail(message, (err, info) => {

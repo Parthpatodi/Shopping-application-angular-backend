@@ -35,7 +35,7 @@ exports.productList = (request, response) => {
         return response.status(200).json(results);
     }).catch(err => {
         console.log(err);
-        return response.status(500).json({ message: "Opps ! Something went wrong" });
+        return response.status(500).json(err);
     });
 }
 
@@ -48,7 +48,7 @@ exports.deleteProduct = (request, response) => {
             return response.status(204).json({ message: 'not deleted' })
     }).catch(err => {
         console.log(err);
-        return response.status(500).json({ message: 'Opps!Something went wrong' });
+        return response.status(500).json(err);
     })
 }
 
@@ -125,12 +125,12 @@ exports.updateProduct = (request, response) => {
             return response.status(404).json({ message: 'updated not successfully' });
     }).catch(err => {
         console.log(err);
-        return response.status(500).json({ message: 'Opps!Something went wrong' });
+        return response.status(500).json(err);
     });
 
 }
 exports.byProduct = (request, response) => {
-    productController.find({ subCategoryId: request.params.sid }).then(result => {
+    productController.find({ subCategory: request.params.sid }).then(result => {
         console.log(result);
         return response.status(200).json(result);
     }).catch(err => {

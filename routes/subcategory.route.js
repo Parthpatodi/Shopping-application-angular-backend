@@ -26,12 +26,12 @@ router.post('/add', upload.array('image'), fireBase.fireBaseStorage, (request, r
         })
         .then(result => {
             console.log(result);
-            return response.status(200).json({ status: 'Sub category Added' });
+            return response.status(200).json(result);
 
 
         }).catch(err => {
             console.log(err);
-            return response.status(500).json({ status: 'Sub Category Not Added' });
+            return response.status(500).json(err);
         })
 })
 
