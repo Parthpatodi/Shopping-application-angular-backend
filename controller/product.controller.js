@@ -78,7 +78,7 @@ exports.addProduct = (request, response) => {
         productQty: request.body.productQty,
         productPrice: request.body.productPrice,
         productDescription: request.body.productDescription,
-        subCategoryId: request.body.categoryId,
+        subCategory: request.body.categoryId,
         date: date
     }).then(result => {
         console.log(result);
