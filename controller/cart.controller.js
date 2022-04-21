@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator');
 
 exports.addtoCart = async(request, response) => {
     let errors = validationResult(request);
+     
     if (!errors.isEmpty()) {
         console.log(errors);
         return response.status(400).json({ errors: errors.array() });
@@ -10,7 +11,7 @@ exports.addtoCart = async(request, response) => {
     let cart = await cartmodel.findOne({ userId: request.body.userId });
     if (!cart) {
         cart = new cartmodel();
-        cart.userId = request.body.userId
+        cart.userId = request.user.id
     }
     cart.productList.push(request.body.productId);
     cart.save().then(result => {

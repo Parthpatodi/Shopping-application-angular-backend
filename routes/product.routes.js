@@ -30,5 +30,5 @@ router.get('/byProduct/:sid', routeCache.cacheSeconds(20), productController.byP
 router.get('/product-details/:pid',productController.viewProductDetail);
 
 router.delete('/delete-product/:id', productController.deleteProduct);
-
+router.get('/sort',routeCache.cacheSeconds(20),productController.sortDatewise);
 module.exports = router;
