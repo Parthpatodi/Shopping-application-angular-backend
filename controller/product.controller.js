@@ -12,7 +12,7 @@ exports.productListSubcategory = (request, response) => {
             return response.status(200).json(result);
         })
         .catch(err => {
-            console.log(err);
+            console.log(err); 
             return response.status(404).json(err);
         });
 }
