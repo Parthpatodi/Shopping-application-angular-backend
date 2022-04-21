@@ -1,8 +1,10 @@
 const crypto = require("crypto");
 const { validationResult } = require("express-validator");
 const Admin = require('../model/admin.model');
-var key = "password";
+const config = require('config');
+let jwt = require("jsonwebtoken");
 var algo = "aes256";
+var key = "password";
 exports.adminSignup = (request, response, next) => {
     const errors = validationResult(request);
     if (!errors.isEmpty())
@@ -31,7 +33,25 @@ exports.adminSignIn = (request, response, next) => {
             decipher.update(result.password, "hex", "utf8") +
             decipher.final("utf8");
         if (decrypted == request.body.password) {
-            return response.status(200).json({ status: 'SignIn success' });
+            const payload = {
+                admin: {
+                  id: result._id
+                }
+              };
+              jwt.sign(
+                payload,
+                config.get('jwtSecret'),
+                { expiresIn: '5 days' },
+                (err, token) => {
+                  if (err) throw err;
+                  console.log(token);
+                  return response.status(200)
+               .json({
+                status:"Login Success",
+                result : result ,
+                token : token
+              }); 
+                })
         } else {
             return response.status(400).json({ status: 'Password has not match ! Try Again..' });
         }
