@@ -22,53 +22,51 @@ router.post("/signin",
     userController.signin);
 
 
-router.post("/googleSignin", async(request, response) => {
-            let username = request.body.username;
-            let email = request.body.email;
-            let provider = request.body.provider;
+router.post("/googleSignin", async (request, response) => {
+    let username = request.body.username;
+    let email = request.body.email;
+    let provider = request.body.provider;
 
-            let newUser = await user.findOne({ email: email });
-            if (!newUser) {
-                user.create({ name: username, email: email, provider: provider })
-                    .then(result => {
-                        const payload = {
-                            user: {
-                                id: result._id
-                            }
-                        };
-                        jwt.sign(
-                            payload,
-                            config.get('jwtSecret'), { expiresIn: '5 days' },
-                            (err, token) => {
-                                if (err) throw err;
-                                console.log(token);
-                                return response.status(200)
-                                    .json({
-                                        status: "Login Success",
-                                        result: result,
-                                        token: token
-                                    });
+    let newUser = await user.findOne({ email: email });
+    if (!newUser) {
+        user.create({ name: username, email: email, provider: provider })
+            .then(result => {
+                const payload = {
+                    user: {
+                        id: result._id
+                    }
+                };
+                jwt.sign(
+                    payload,
+                    config.get('jwtSecret'), { expiresIn: '5 days' },
+                    (err, token) => {
+                        if (err) throw err;
+                        console.log(token);
+                        return response.status(200)
+                            .json({
+                                status: "Login Success",
+                                result: result,
+                                token: token
+                            });
 
-                            })
-                    }).catch((err) => {
-                        console.log(err);
-                        return response.status(401).json(err);
                     })
+            }).catch((err) => {
+                console.log(err);
+                return response.status(401).json(err);
+            })
+    }
+})
 
+router.get("/view-profile/:id", auth, userController.viewProfile);
 
+router.post("/edit-user", auth,
+    body("name").notEmpty(),
+    body("email").isEmail(),
+    body("address").notEmpty(),
+    body("mobile").isMobilePhone(),
+    userController.edit);
 
+router.post("/search-product", userController.searchProducts);
+// router.delete("/delete-user/:id",userController.deleteUser);
 
-
-                router.get("/view-profile/:id", auth, userController.viewProfile);
-
-                router.post("/edit-user", auth,
-                    body("name").notEmpty(),
-                    body("email").isEmail(),
-                    body("address").notEmpty(),
-                    body("mobile").isMobilePhone(),
-                    userController.edit);
-
-                router.post("/search-product", userController.searchProducts);
-                // router.delete("/delete-user/:id",userController.deleteUser);
-
-                module.exports = router;
+module.exports = router;
