@@ -31,9 +31,9 @@ app.use('/subcategory', subcategoryRouter);
 app.use("/cart", cartRouter);
 app.use("/wishList", wishRouter);
 app.use("/user", userRouter);
-app.use("/", (request, response) => {
-    response.send("Herllo ....welcome in an Attire collection");
-});
+// app.use("/", (request, response) => {
+//     response.send("Herllo in Vivah ....welcome in an Attire collection");
+// });
 
 app.listen(port, () => {
     console.log("<------------Server Started at port no.----------->" + port)
