@@ -8,13 +8,14 @@ exports.addtoCart = async(request, response) => {
         console.log(errors);
         return response.status(400).json({ errors: errors.array() });
     }
-    let cart = await cartmodel.findOne({ userId: request.body.userId });
+    let cart = await cartmodel.findOne({ userId: request.user.id });
     if (!cart) {
         cart = new cartmodel();
         cart.userId = request.user.id
     }
     cart.productList.push(request.body.productId);
     cart.save().then(result => {
+        console.log(result);
         return response.status(201).json(result)
     }).catch(
         err => {
@@ -24,7 +25,7 @@ exports.addtoCart = async(request, response) => {
 
 
 exports.viewCart = (request, response) => {
-    cartmodel.findOne({ userId: request.params.userId })
+    cartmodel.findOne({ userId: request.user.id })
         .populate("productList").populate("userId")
         .then(result => {
             return response.status(201).json(result)
