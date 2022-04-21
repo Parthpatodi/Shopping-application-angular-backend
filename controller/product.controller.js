@@ -90,9 +90,9 @@ exports.addProduct = (request, response) => {
 }
 
 exports.sortDatewise = (request, response) => {
-    Product.find({}).sort([
+    productController.find({}).sort([
         ['date', -1]
-    ]).exec(function(err, docs) {
+    ]).limit(8).exec(function(err, docs) {
         console.log(docs);
         console.log(err);
         response.status(200).json(docs);

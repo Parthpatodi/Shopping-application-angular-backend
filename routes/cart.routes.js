@@ -5,8 +5,7 @@ const cartController = require('../controller/cart.controller');
 const auth = require('../middle/customer.auth');
 
 
-router.post("/add-to-cart", auth,
-    body('userId').not().isEmpty(),
+router.post("/add-to-cart",auth,
     body('productList').not().isEmpty(), cartController.addtoCart);
 
 router.get("view-cart/:userId", auth, cartController.viewCart);

@@ -96,16 +96,16 @@ exports.verify = (request, response) => {
   };
   
 exports.signin = (request, response) => {
-    const errors = validationResult(request);
-    if (!errors.isEmpty())
-      return response.status(400).json({ errors: errors.array() });
+    // const errors = validationResult(request);
+    // if (!errors.isEmpty())
+    //   return response.status(400).json({ errors: errors.array() });
     User.findOne({ email: request.body.email })
       .then((result) => {
         var decipher = crypto.createDecipher(algo, key);
         var decrypted =
           decipher.update(result.password, "hex", "utf8") +
           decipher.final("utf8");
-         if(result.isVerified == true ){
+        // if(result.isVerified == true ){
             if (decrypted == request.body.password){
               const payload = {
                 user: {
@@ -129,10 +129,13 @@ exports.signin = (request, response) => {
              
            }
           else 
+          {
+             console.log("invalid password");
               return response.status(202).json({ message: "Invalid Password" });     
           }
-         else
-         return response.status(500).json({message : "Please verify your accout first then login"});
+        
+        //  else
+        //  return response.status(500).json({message : "Please verify your accout first then login";
     })
       .catch((err) => {
         console.log(err);
