@@ -4,10 +4,10 @@ const { body } = require('express-validator');
 const wishController = require('../controller/wishList.controller');
 const auth = require('../middle/customer.auth');
 
-router.post("/add-to-wishlist", auth,body('userId').not().isEmpty(),body('productList').not().isEmpty(), wishController.addtoWishList);
+router.post("/add-to-wishlist", auth,body('productId').not().isEmpty(), wishController.addtoWishList);
 
-router.get("view-wish-list/:userId", auth, wishController.viewWish);
+router.get("/view-wish-list", auth, wishController.viewWish);
 
-router.delete("delete-from-wishList", auth, wishController.removeWish);
+router.post("/delete-from-wishList", auth, wishController.removeWish);
 
 module.exports = router;

@@ -9,10 +9,10 @@ exports.addtoWishList = async(request, response) => {
         console.log(errors);
         return response.status(400).json({ errors: errors.array() });
     }
-    let wish = await wishList.findOne({ userId: request.body.userId });
+    let wish = await wishList.findOne({ userId: request.user.id });
     if (!wish) {
         wish = new wishList();
-        wish.userId = request.body.userId
+        wish.userId = request.user.id
     }
     wish.productList.push(request.body.productId);
     wish.save().then(result => {
@@ -25,7 +25,7 @@ exports.addtoWishList = async(request, response) => {
 
 
 exports.viewWish = (request, response) => {
-    wishList.findOne({ userId: request.params.userId })
+    wishList.findOne({ userId: request.user.id })
         .populate("productList").populate("userId")
         .then(result => {
             return response.status(201).json(result)
@@ -36,7 +36,7 @@ exports.viewWish = (request, response) => {
 
 
 exports.removeWish = (request, response) => {
-    wishList.updateOne({ userId: request.body.userId }, {
+    wishList.updateOne({ userId: request.user.id }, {
             $pullAll: {
                 productList: [{
                     _id: request.body.productId
