@@ -186,7 +186,7 @@ exports.signin = (request, response) => {
   
   exports.searchProducts = (request, response) => {
     var regex = new RegExp(request.body.text, "i");
-    Product.find({ productName: regex })
+    Product.find({ productName: regex , productDescription:regex})
       .then((result) => {
         return response.status(200).json(result);
           })
