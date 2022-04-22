@@ -10,6 +10,8 @@ router.post("/add-to-cart",auth,
 
 router.get("/view-carts", auth, cartController.viewCart);
 
-router.delete("delete-from-cart", auth, cartController.delCart);
+router.post("/remove-from-cart", auth, cartController.delCart);
 
+
+router.post("/delete-carts", auth, cartController.deleteCart);
 module.exports = router;

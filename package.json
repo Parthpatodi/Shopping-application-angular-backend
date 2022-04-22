@@ -23,6 +23,7 @@
     "mongoose": "^6.2.10",
     "multer": "^1.4.4",
     "nodemailer": "^6.7.3",
+    "razorpay": "^2.8.1",
     "route-cache": "^0.4.7"
   },
   "repository": {

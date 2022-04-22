@@ -34,9 +34,17 @@ exports.viewCart = (request, response) => {
         })
 }
 
-
+exports.deleteCart = (request, response) => {
+    cartmodel.deleteOne({_id: request.user.id}).then(result => {
+        console.log(result);
+        return response.status(200).json(result);
+    }).catch(err=>{
+        console.log(err);
+        return response.status(500).json({err:err.array});
+    });
+}
 exports.delCart = (request, response) => {
-    cartmodel.updateOne({ userId: request.body.userId }, { 
+    cartmodel.updateOne({ userId: request.user.id }, { 
             $pullAll: {
                 productList: [{
                     _id: request.body.productId 

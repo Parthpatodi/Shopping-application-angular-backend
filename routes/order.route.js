@@ -8,12 +8,10 @@ const router = express.Router();
 
 router.post('/place-order', body('mobile').not().isEmpty(),
     body('orderList').not().isEmpty(), body('address').not().isEmpty(),
-    body('total').not().isEmpty(), async(request, response) => {
+    body('total').not().isEmpty(), auth,async(request, response) => {
         const { address, mobile, total } = request.body;
-        // const {userId} = request.user.id;
-        const orderItem = { address, mobile, total };
-        console.log(request.body);
-        console.log(orderItem);
+        const {userId} = request.user.id;
+        const orderItem = { address, mobile, total ,userId};
 
         var order = new Order(orderItem);
         for (i = 0; i < request.body.orderList.length; i++) {
@@ -25,9 +23,9 @@ router.post('/place-order', body('mobile').not().isEmpty(),
 
         order.save()
             .then(result => {
-                console.log(result);
-                //const {userId} = request.user.id
-                return response.status(500).json({ err: 'Server error' });
+                console.log("order"+result);
+        
+                return response.status(200).json({ msg: 'order placed' });
             }).catch(err => {
                 console.log(err);
                 return response.status(500).json({ err: 'Server error' });
