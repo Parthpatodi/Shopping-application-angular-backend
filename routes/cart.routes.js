@@ -6,10 +6,12 @@ const auth = require('../middle/customer.auth');
 
 
 router.post("/add-to-cart",auth,
-    body('productList').not().isEmpty(), cartController.addtoCart);
+    body('productId').not().isEmpty(), cartController.addtoCart);
 
-router.get("view-cart/:userId", auth, cartController.viewCart);
+router.get("/view-carts", auth, cartController.viewCart);
 
-router.delete("delete-from-cart", auth, cartController.delCart);
+router.post("/remove-from-cart", auth, cartController.delCart);
 
+
+router.post("/delete-carts", auth, cartController.deleteCart);
 module.exports = router;
