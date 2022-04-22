@@ -5,6 +5,9 @@ const auth = require('../middle/customer.auth');
 const { body } = require('express-validator');
 const routeCache = require('route-cache');
 const router = express.Router();
+const Razorpay = require("razorpay");
+
+var instance = new Razorpay({ key_id: 'rzp_test_7mhArK6g7mgek0', key_secret: 'Pn50vQs9YfV6fKv2SL8OpqCd' });
 
 router.post('/place-order', body('mobile').not().isEmpty(),
     body('orderList').not().isEmpty(), body('address').not().isEmpty(),
@@ -33,8 +36,32 @@ router.post('/place-order', body('mobile').not().isEmpty(),
                 return response.status(500).json({ err: 'Server error' });
             });
     });
+
+router.post("/pay",(req,res)=>{
+        instance.orders.create({
+            amount: 50000,
+            currency: "INR"
+          },(err,order)=>{
+              if(err){
+                  console.log(err);
+              }
+              else
+                 console.log(order);
+                 res.status(200).json(order);
+          })      
+    });
+    
+router.post('/payment-status',(req,res)=>{
+        instance.payments.fetch(req.body.razorpay_payment_id).then((result) => {
+            console.log(result);
+            res.send("payment success");
+        }).catch((err) => {
+            console.log(err);
+        });
+    });
+    
 router.get('/view-order', routeCache.cacheSeconds(20), (request, response) => {
-    Order.find().then(res => {
+    Order.find().then(result => {
         console.log(result);
         response.status(200).json(result);
     }).catch(err => {
