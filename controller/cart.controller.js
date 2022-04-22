@@ -35,9 +35,14 @@ exports.viewCart = (request, response) => {
 }
 
 exports.deleteCart = (request, response) => {
-    cartmodel.deleteOne({_id: request.user.id}).then(result => {
+    cartmodel.deleteOne({userId: request.user.id}).then(result => {
         console.log(result);
-        return response.status(200).json(result);
+        if(result.deletedCount)
+        return response.status(200).json({msg:"success"});
+
+        else
+        return response.status(200).json({msg:"failed to delete"});
+
     }).catch(err=>{
         console.log(err);
         return response.status(500).json({err:err.array});
