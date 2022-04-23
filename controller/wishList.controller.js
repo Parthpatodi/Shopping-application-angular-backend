@@ -22,7 +22,21 @@ exports.addtoWishList = async(request, response) => {
             return response.status(500).json({ message: 'Oops! Something went wrong' });
         })
 }
+exports.deleteWishList = (request, response) => {
+    console.log("delete api call...");
+    wishList.deleteOne({userId: request.user.id}).then(result => {
+        console.log(result);
+        if(result.deletedCount)
+        return response.status(200).json({msg:"success"});
 
+        else
+        return response.status(200).json({msg:"failed to delete"});
+
+    }).catch(err=>{
+        console.log(err);
+        return response.status(500).json({err:err.array});
+    });
+}
 
 exports.viewWish = (request, response) => {
     wishList.findOne({ userId: request.user.id })

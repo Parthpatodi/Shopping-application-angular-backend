@@ -7,7 +7,9 @@ const routeCache = require('route-cache');
 const router = express.Router();
 const Razorpay = require("razorpay");
 
-var instance = new Razorpay({ key_id: 'rzp_test_7mhArK6g7mgek0', key_secret: 'Pn50vQs9YfV6fKv2SL8OpqCd' });
+// var instance = new Razorpay({ key_id: 'rzp_test_7mhArK6g7mgek0', key_secret: 'Pn50vQs9YfV6fKv2SL8OpqCd' });
+var instance = new Razorpay({ key_id: 'rzp_test_MqoJug1nXNqVws', 
+key_secret: 'YHoby3Skm0FCRLhnjokcit1Z' })
 
 router.post('/place-order', body('mobile').not().isEmpty(),
     body('orderList').not().isEmpty(), body('address').not().isEmpty(),
@@ -50,6 +52,7 @@ router.post("/pay",(req,res)=>{
     });
     
 router.post('/payment-status',(req,res)=>{
+       console.log("second api called");
         instance.payments.fetch(req.body.razorpay_payment_id).then((result) => {
             console.log(result);
             res.send("payment success");
