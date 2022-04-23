@@ -6,6 +6,7 @@ const { body } = require('express-validator');
 const routeCache = require('route-cache');
 const router = express.Router();
 const Razorpay = require("razorpay");
+const { request } = require('express');
 
 // var instance = new Razorpay({ key_id: 'rzp_test_7mhArK6g7mgek0', key_secret: 'Pn50vQs9YfV6fKv2SL8OpqCd' });
 var instance = new Razorpay({ key_id: 'rzp_test_MqoJug1nXNqVws', 
@@ -39,7 +40,7 @@ router.post('/place-order', body('mobile').not().isEmpty(),
 
 router.post("/pay",(req,res)=>{
         instance.orders.create({
-            amount: 50000,
+            amount: request.body.total,
             currency: "INR"
           },(err,order)=>{
               if(err){
