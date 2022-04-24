@@ -136,6 +136,28 @@ exports.addProduct = (request, response) => {
     return response.status(404).json(err);
   }
 }
+exports.sortHighPrice = (request, response)=>{
+    try{
+        console.log(request.params);
+        productController.find({subCategory: request.params.sid}).sort({productPrice:-1}).exec(function(err, docs) {
+            console.log(docs);
+             if(err){
+                 
+                printLogger(2,`sort Price : ${JSON.stringify(err)}`);
+                response.status(200).json(err);
+             }
+             else{
+    
+                printLogger(2,`sort Price: ${JSON.stringify(docs)}`);
+                response.status(200).json(docs);
+             }
+        });
+      }catch(err){
+        console.log(err);
+        printLogger(0,`sort price : ${JSON.stringify(err)}`);
+        return response.status(404).json(err);
+    }
+}
 exports.sortPrice = (request, response) => {
     try{
         productController.find({subCategory: request.params.sid}).sort({productPrice:1}).exec(function(err, docs) {
