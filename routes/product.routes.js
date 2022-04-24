@@ -33,4 +33,6 @@ router.get('/product-details/:pid',productController.viewProductDetail);
 router.delete('/delete-product/:id', productController.deleteProduct);
 router.get('/sort',routeCache.cacheSeconds(20),productController.sortDatewise);
 router.get('/sort-price/:sid',routeCache.cacheSeconds(20),productController.sortPrice);
+
+router.get('/price-high/:sid',routeCache.cacheSeconds(20),productController.sortHighPrice);
 module.exports = router;
