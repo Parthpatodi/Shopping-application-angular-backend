@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const Product = require("../model/product.model");
 const config = require('config');
+const {printLogger} = require('../core/utility');
 let jwt = require("jsonwebtoken");
 var key = "password";
 var algo = "aes256";
@@ -13,6 +14,9 @@ exports.signup = async (request,response)=>{
     const errors = validationResult(request);
     if (!errors.isEmpty())
       return response.status(400).json({ errors: errors.array() }); 
+      try{
+      let reqBody = request.body;
+      printLogger(2,`info message router with: ${JSON.stringify(reqBody)}`);
         const {name ,email,password,address,mobile} = request.body;
           let user = await User.findOne({email}); 
           if(user){
@@ -69,12 +73,18 @@ exports.signup = async (request,response)=>{
         });
   
         console.log(result);
+        printLogger(2,`signup success : ${JSON.stringify(result)}`);
         return response.status(200).json(result);
       })
       .catch((err) => {
         console.log(err);
+        printLogger(0,`error occured in router: ${JSON.stringify(err)}`);
         return response.status(500).json({ message: "Something went Wrong" });
       });
+    }catch(err){
+      return response.status(401).json(err);
+      printLogger(4,`error occured in router: ${JSON.stringify(err)}`);
+    }
 }
 
 exports.verify = (request, response) => {
@@ -85,11 +95,14 @@ exports.verify = (request, response) => {
       }
     )
     .then((result) => {
+      printLogger(2,`login success : ${JSON.stringify(result)}`);
         if (result.modifiedCount) {
+          
               return response.status(202).json({message : "Your Account is verified . Now you can login"});
             }
         })
       .catch((err) => {
+        printLogger(0,`error occured in router: ${JSON.stringify(err)}`);
         console.log(err);
         return response.status(500).json(err);
       });
@@ -99,6 +112,10 @@ exports.signin = (request, response) => {
     // const errors = validationResult(request);
     // if (!errors.isEmpty())
     //   return response.status(400).json({ errors: errors.array() });
+    try{
+      let reqBody = request.body;
+      printLogger(2,`info message router with: ${JSON.stringify(reqBody)}`);
+    
     User.findOne({ email: request.body.email })
       .then((result) => {
         var decipher = crypto.createDecipher(algo, key);
@@ -119,6 +136,7 @@ exports.signin = (request, response) => {
                 (err, token) => {
                   if (err) throw err;
                   console.log(token);
+                  printLogger(2,`login success : ${JSON.stringify(result)}`);
                   return response.status(200)
                .json({
                 status:"Login Success",
@@ -131,6 +149,7 @@ exports.signin = (request, response) => {
           else 
           {
              console.log("invalid password");
+      
               return response.status(202).json({ message: "Invalid Password" });     
           }
         
@@ -139,24 +158,46 @@ exports.signin = (request, response) => {
     })
       .catch((err) => {
         console.log(err);
+        printLogger(0,`error occured in router: ${JSON.stringify(err)}`);
         return response.status(401).json(err);
       });
+    }
+    catch(err){
+      printLogger(4,`error occured in router: ${JSON.stringify(err)}`);
+      return response.status(401).json(err);
+    }
   };
   
   exports.viewProfile = (request, response) => {
+    try{
+      let reqBody = request.params;
+      printLogger(2,`info message router with: ${JSON.stringify(reqBody)}`);
+    
     User.findOne({ _id: request.params.id },{password:0 ,isVerified:0})
       .then((result) => {
+        printLogger(2,`login success : ${JSON.stringify(result)}`);
         return response.status(200).json(result);
       })
       .catch((err) => {
+        printLogger(0,`error occured in router: ${JSON.stringify(err)}`);
         return response.status(401).json(result);
       });
+    }
+    catch(err){
+      printLogger(4,`error occured in router: ${JSON.stringify(err)}`);
+      return response.status(401).json(err);
+
+    }
   };
 
  exports.edit = (request, response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty())
       return response.status(400).json({ errors: errors.array() });
+      try{
+        let reqBody = request.body;
+        printLogger(2,`info message router with: ${JSON.stringify(reqBody)}`);
+      
     User.updateOne(
       { _id: request.body.userId },
       {
@@ -169,6 +210,7 @@ exports.signin = (request, response) => {
       }
     )
       .then((result) => {
+        printLogger(2,`login success : ${JSON.stringify(result)}`);
         if (result.modifiedCount) {
           User.findOne({ _id: request.body.userId })
             .then((result) => {
@@ -180,18 +222,35 @@ exports.signin = (request, response) => {
         }
       })
       .catch((err) => {
+        printLogger(0,`error occured in router: ${JSON.stringify(err)}`);
         return response.status(500).json(err);
       });
+    }catch(err){
+      printLogger(4,`error occured in router: ${JSON.stringify(err)}`);
+      return response.status(500).json(err);
+    }
   };
   
   exports.searchProducts = (request, response) => {
+    try{
+      let reqBody = request.body;
+      printLogger(2,`info message router with: ${JSON.stringify(reqBody)}`);
+    
     var regex = new RegExp(request.body.text, "i");
     Product.find({ productName: regex , productDescription:regex})
       .then((result) => {
+        printLogger(2,`search product  : ${JSON.stringify(result)}`);
         return response.status(200).json(result);
           })
       .catch((err) => {
         console.log(err);
+        printLogger(0,`error occured in router: ${JSON.stringify(err)}`);
         return response.status(500).json({ message: "Somthing went wrong" });
       });
+    }
+    catch(err){
+      printLogger(4,`error occured in router: ${JSON.stringify(err)}`);
+      return response.status(500).json(err);
+    }
+
   };  

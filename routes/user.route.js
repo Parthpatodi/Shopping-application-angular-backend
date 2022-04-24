@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require("../middle/customer.auth");
 const userController = require("../controller/user.controller");
 const user = require('../model/user.model')
-
+const {printLogger} = require('../core/utility');
 const { body } = require("express-validator");
 
 router.post("/signup",
@@ -23,38 +23,38 @@ router.post("/signin",
 
 
 router.post("/googleSignin", async (request, response) => {
+try{
+    let reqBody = request.body;
+  printLogger(2,`info message router with: ${JSON.stringify(reqBody)}`);
     let username = request.body.username;
     let email = request.body.email;
     let provider = request.body.provider;
-
     let newUser = await user.findOne({ email: email });
     if (!newUser) {
         user.create({ name: username, email: email, provider: provider })
             .then(result => {
-                const payload = {
-                    user: {
-                        id: result._id
-                    }
-                };
-                jwt.sign(
-                    payload,
-                    config.get('jwtSecret'), { expiresIn: '5 days' },
-                    (err, token) => {
-                        if (err) throw err;
-                        console.log(token);
+                        
+            printLogger(2,`login success : ${JSON.stringify(result)}`);
                         return response.status(200)
                             .json({
                                 status: "Login Success",
                                 result: result,
-                                token: token
+                      
                             });
 
                     })
-            }).catch((err) => {
+            .catch((err) => {
                 console.log(err);
+                printLogger(0,`error occured in router: ${JSON.stringify(err)}`);
                 return response.status(401).json(err);
             })
     }
+  }
+  catch(err){
+    console.log(err);
+    printLogger(4,`error  google login occured in router: ${JSON.stringify(err)}`);
+    return response.status(401).json(err);
+  }
 })
 
 router.get("/view-profile/:id", auth, userController.viewProfile);

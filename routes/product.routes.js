@@ -4,6 +4,7 @@ const routeCache = require('route-cache');
 const productController = require('../controller/product.controller');
 const { body } = require('express-validator');
 const multer = require('multer');
+const Product = require('../model/product.model');
 const fireBase = require("../middle/fireBase");
 var storage = multer.diskStorage({
     destination: 'public/images',
@@ -31,4 +32,5 @@ router.get('/product-details/:pid',productController.viewProductDetail);
 
 router.delete('/delete-product/:id', productController.deleteProduct);
 router.get('/sort',routeCache.cacheSeconds(20),productController.sortDatewise);
+router.get('/sort-price/:sid',routeCache.cacheSeconds(20),productController.sortPrice);
 module.exports = router;
