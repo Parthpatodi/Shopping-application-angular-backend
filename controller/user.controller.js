@@ -173,7 +173,7 @@ exports.signin = (request, response) => {
       let reqBody = request.params;
       printLogger(2,`info message router with: ${JSON.stringify(reqBody)}`);
     
-    User.findOne({ _id: request.params.id },{password:0 ,isVerified:0})
+    User.findOne({ _id: request.user.id },{password:0 ,isVerified:0})
       .then((result) => {
         printLogger(2,`login success : ${JSON.stringify(result)}`);
         return response.status(200).json(result);
@@ -191,15 +191,12 @@ exports.signin = (request, response) => {
   };
 
  exports.edit = (request, response) => {
-    const errors = validationResult(request);
-    if (!errors.isEmpty())
-      return response.status(400).json({ errors: errors.array() });
       try{
         let reqBody = request.body;
         printLogger(2,`info message router with: ${JSON.stringify(reqBody)}`);
-      
+       
     User.updateOne(
-      { _id: request.body.userId },
+      { _id: request.user.id },
       {
         $set: {
           name: request.body.name,
@@ -210,20 +207,21 @@ exports.signin = (request, response) => {
       }
     )
       .then((result) => {
+        console.log(result);
         printLogger(2,`login success : ${JSON.stringify(result)}`);
         if (result.modifiedCount) {
-          User.findOne({ _id: request.body.userId })
-            .then((result) => {
-              return response.status(202).json(result);
-            })
-            .catch((err) => {
-              return response.status(500).json(err);
-            });
+          printLogger(2,`login success : ${JSON.stringify(result.modifiedCount)}`);
+              return response.status(200).json(result);
+        
+        }
+        else{
+          printLogger(0,`login success : ${JSON.stringify(result)}`);
+          return response.status(200).json(result.modifiedCount);
         }
       })
       .catch((err) => {
         printLogger(0,`error occured in router: ${JSON.stringify(err)}`);
-        return response.status(500).json(err);
+        return response.status(404).json(err);
       });
     }catch(err){
       printLogger(4,`error occured in router: ${JSON.stringify(err)}`);

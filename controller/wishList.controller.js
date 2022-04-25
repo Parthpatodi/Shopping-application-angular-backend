@@ -61,16 +61,17 @@ exports.deleteWishList = (request, response) => {
 exports.viewWish = (request, response) => {
     try{
     wishList.findOne({ userId: request.user.id })
-        .populate("productList").populate("userId")
+        .populate("productList")
         .then(result => {
             printLogger(2,`view wish : ${JSON.stringify(result)}`);
-            return response.status(201).json(result)
+            return response.status(200).json(result)
         }).catch(error => {
             printLogger(0,`view wish : ${JSON.stringify(error)}`);
-            return response.status(500).json({ message: 'Oops! Something went wrong' });
+            return response.status(404).json({ message: 'Oops! Something went wrong' });
         })
     }catch(err){
     printLogger(4,`view wishList : ${JSON.stringify(err)}`);
+    return response.status(500).json({ message: 'Oops! Something went wrong' });
     }
 }
 
