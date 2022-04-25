@@ -57,13 +57,9 @@ try{
   }
 })
 
-router.get("/view-profile/:id", auth, userController.viewProfile);
+router.get("/view-profile", auth, userController.viewProfile);
 
 router.post("/edit-user", auth,
-    body("name").notEmpty(),
-    body("email").isEmail(),
-    body("address").notEmpty(),
-    body("mobile").isMobilePhone(),
     userController.edit);
 
 router.post("/search-product", userController.searchProducts);

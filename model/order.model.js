@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
 
-    userId: String,
+    userId: mongoose.Schema.Types.ObjectId,
     orderList: [{
-        pid: String,
+        pid: mongoose.Schema.Types.ObjectId,
         quantity: String,
         date: {
             type: Date,

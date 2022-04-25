@@ -5,10 +5,9 @@ const auth = require('../middle/customer.auth');
 const { body } = require('express-validator');
 const routeCache = require('route-cache');
 const router = express.Router();
-const logger = require('../core/clientRequestLogger');
+const {printLogger} = require('../core/utility');
 const Razorpay = require("razorpay");
 
-const printLogger = require('../core/utility');
 
 var instance = new Razorpay({ key_id: 'rzp_test_7mhArK6g7mgek0', key_secret: 'Pn50vQs9YfV6fKv2SL8OpqCd' });
 
@@ -71,7 +70,7 @@ router.post("/pay",(req,res)=>{
             res.status(200).json(err);
         }  
     });
-    
+
 router.post('/payment-status',(req,res)=>{
     try{
         instance.payments.fetch(req.body.razorpay_payment_id).then((result) => {
@@ -88,19 +87,20 @@ router.post('/payment-status',(req,res)=>{
         res.status(500).json(err);
     }
     });
-    
+
 router.get('/view-order', routeCache.cacheSeconds(20), (request, response) => {
     try{
-    Order.find().then(result => {
+    Order.find().populate("orderList").populate("pid").then(result => {
         console.log(result);
         printLogger(2, `*********** view order *************${JSON.stringify(result)}`, 'order');
         response.status(200).json(result);
      }).catch(err => {
-        usersLogger.error(`Unable to find user: ${err}`);
+         console.log(err);
         printLogger(0, `*********** view order *************${JSON.stringify(err)}`, 'order');
         return response.status(404).json({ err: 'Server error' });
     })
      }catch(err){
+         console.log(err);
         printLogger(4, `*********** view order *************${JSON.stringify(err)}`, 'order');
     res.status(500).json(order);
 }
@@ -156,7 +156,22 @@ router.get('/sort', routeCache.cacheSeconds(20), (request, response) => {
     });
 }catch(err){
     printLogger(0, `*********** sort *************${JSON.stringify(err)}`, 'order');
-    response.status(200).json(err);
+    response.status(404).json(err);
 }
+});
+router.get('/order-view',auth,(request, response)=>{
+    try{
+        Order.findOne({ userId: request.user.id }).populate("orderList.pid").then(result => {
+            console.log(result);
+            printLogger(2, `*********** order *************${JSON.stringify(result)}`, 'order');
+            response.status(200).json(result);
+        }).catch(err => {
+            printLogger(4, `*********** order *************${JSON.stringify(err)}`, 'order');
+            return response.status(500).json({ err: 'Server error' });
+        });
+    }catch(err){
+        printLogger(4, `*********** order *************${JSON.stringify(err)}`, 'order');
+        return response.status(500).json({ err: 'Server error' });
+    }
 })
 module.exports = router;
